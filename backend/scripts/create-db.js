@@ -19,11 +19,13 @@ async function init() {
     await pool.query(`
       CREATE TABLE IF NOT EXISTS users (
         id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id CHAR(36) NOT NULL UNIQUE,
         name VARCHAR(255) NOT NULL,
         email VARCHAR(255) UNIQUE NOT NULL,
         phone VARCHAR(20),
         password VARCHAR(255) NOT NULL,
         role ENUM('customer', 'tailor', 'admin') DEFAULT 'customer',
+        status ENUM('active','inactive') NOT NULL DEFAULT 'active',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -34,6 +34,20 @@ app.use('/api/auth', authRouter)
 app.use('/api/categories', categoryRouter)
 app.use('/api/orders', orderRouter)
 
-app.listen(PORT, () => {
-  console.log(`Backend listening on http://localhost:${PORT}`)
-})
+async function startServer() {
+  try {
+    await createDatabaseIfNeeded()
+    const pool = await getPool()
+    await pool.query('SELECT 1')
+
+    app.listen(PORT, () => {
+      console.log(`Backend listening on http://localhost:${PORT}`)
+      console.log(`Connected to database ${dbConfig.database} on ${dbConfig.host}:${dbConfig.port}`)
+    })
+  } catch (error) {
+    console.error('Unable to start backend, database connection failed:', error)
+    process.exit(1)
+  }
+}
+
+startServer()

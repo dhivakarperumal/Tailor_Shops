@@ -32,7 +32,7 @@ export const createCategory = async (req, res) => {
   } catch (error) {
     console.error('Create category error:', error)
     if (error.code === 'ER_DUP_ENTRY') return res.status(409).json({ error: 'Category ID already exists' })
-    res.status(500).json({ error: 'Internal server error' })
+    res.status(500).json({ error: 'Internal server error', message: error.message, code: error.code })
   }
 }
 

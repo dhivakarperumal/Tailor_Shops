@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-const DB_HOST = process.env.DB_HOST ?? 'localhost'
+const DB_HOST = process.env.DB_HOST ?? '127.0.0.1'
 const DB_PORT = process.env.DB_PORT ? Number(process.env.DB_PORT) : 3306
 const DB_USER = process.env.DB_USER ?? 'root'
 const DB_PASSWORD = process.env.DB_PASSWORD ?? ''
@@ -17,7 +17,8 @@ export const dbConfig = {
   database: DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
+  connectTimeout: 10000
 }
 
 export async function createDatabaseIfNeeded() {
@@ -31,6 +32,11 @@ export async function createDatabaseIfNeeded() {
   await connection.end()
 }
 
+let pool
+
 export async function getPool() {
-  return mysql.createPool(dbConfig)
+  if (!pool) {
+    pool = mysql.createPool(dbConfig)
+  }
+  return pool
 }
