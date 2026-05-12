@@ -43,19 +43,9 @@ function Login() {
 
   const handleSuccess = async (credentialResponse) => {
     try {
-      const decoded = jwtDecode(credentialResponse.credential);
-
-      const googleUser = {
-        name: decoded.name,
-        email: decoded.email,
-        picture: decoded.picture,
-        googleId: decoded.sub
-      };
-
-      // send to backend
       const res = await api.post(
         "/auth/google-login",
-        googleUser
+        { credential: credentialResponse.credential }
       );
 
       login(res.data.user, res.data.token);
